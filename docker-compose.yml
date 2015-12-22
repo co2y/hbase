@@ -3,8 +3,14 @@ master:
         command: '/bin/bash -c "service ssh start && sleep 5 && sed -i \"s/server171/{{master}}/g\" /root/hadoop-2.3.0/etc/hadoop/slaves /root/hadoop-2.3.0/etc/hadoop/core-site.xml /root/hadoop-2.3.0/etc/hadoop/yarn-site.xml /root/hadoop-2.3.0/etc/hadoop/mapred-site.xml /root/zookeeper-3.4.5/conf/zoo.cfg /root/hbase-0.98.16.1-hadoop2/conf/hbase-site.xml /root/hbase-0.98.16.1-hadoop2/conf/regionservers && sed -i "s/server170/{{slave}}/g" /root/hadoop-2.3.0/etc/hadoop/slaves /root/zookeeper-3.4.5/conf/zoo.cfg /root/hbase-0.98.16.1-hadoop2/conf/hbase-site.xml /root/hbase-0.98.16.1-hadoop2/conf/regionservers && mkdir -p /home/zookeeper/data && echo \"1\" > /home/zookeeper/data/myid && /root/hadoop-2.3.0/bin/hdfs namenode -format && /root/hadoop-2.3.0/sbin/start-dfs.sh && /root/hadoop-2.3.0/sbin/start-yarn.sh && /root/zookeeper-3.4.5/bin/zkServer.sh start && /root/hbase-0.98.16.1-hadoop2/bin/start-hbase.sh && service ssh stop && /usr/sbin/sshd -D"'
         environment:
           - JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
+          - HADOOP_HOME=/root/hadoop-2.3.0
+          - HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
+          - HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib"
 slave:
         image: docker.iwanna.xyz:5000/hmonkey/hbase_slave:v2
         command: '/bin/bash -c "sed -i \"s/server171/{{master}}/g\" /root/hadoop-2.3.0/etc/hadoop/slaves /root/hadoop-2.3.0/etc/hadoop/core-site.xml /root/hadoop-2.3.0/etc/hadoop/yarn-site.xml /root/hadoop-2.3.0/etc/hadoop/mapred-site.xml /root/zookeeper-3.4.5/conf/zoo.cfg /root/hbase-0.98.16.1-hadoop2/conf/hbase-site.xml /root/hbase-0.98.16.1-hadoop2/conf/regionservers && sed -i "s/server170/{{slave}}/g" /root/hadoop-2.3.0/etc/hadoop/slaves /root/zookeeper-3.4.5/conf/zoo.cfg /root/hbase-0.98.16.1-hadoop2/conf/hbase-site.xml /root/hbase-0.98.16.1-hadoop2/conf/regionservers && mkdir -p /home/zookeeper/data && echo \"2\" > /home/zookeeper/data/myid && /root/zookeeper-3.4.5/bin/zkServer.sh start && /usr/sbin/sshd -D"'
         environment:
           - JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
+          - HADOOP_HOME=/root/hadoop-2.3.0
+          - HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
+          - HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib"
